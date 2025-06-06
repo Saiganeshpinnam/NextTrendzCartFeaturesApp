@@ -43,18 +43,6 @@ class App extends Component {
     }))
   }
 
-  addCartItem = product => {
-    const {cartList} = this.state
-    //  this.setState(prevState => ({cartList: [...prevState.cartList, product]}))
-    //   TODO: Update the code here to implement addCartItem
-    const isItemAdded = cartList.some(
-      eachCartItem => eachCartItem.id === product.id,
-    )
-    if (!isItemAdded) {
-      this.setState(prevState => ({cartList: [...prevState.cartList, product]}))
-    }
-  }
-
   removeCartItem = id => {
     const {cartList} = this.state
     const cartItemsAfterDelete = cartList.filter(
@@ -62,6 +50,25 @@ class App extends Component {
     )
     this.setState({
       cartList: cartItemsAfterDelete,
+    })
+  }
+
+  addCartItem = product => {
+    // //   TODO: Update the code here to implement addCartItem
+    this.setState(prevState => {
+      const existingItem = prevState.cartList.find(
+        item => item.id === product.id,
+      )
+      if (existingItem) {
+        return {
+          cartList: prevState.cartList.map(item =>
+            item.id === product.id
+              ? {...item, quantity: item.quantity + product.quantity}
+              : item,
+          ),
+        }
+      }
+      return {cartList: [...prevState.cartList, product]}
     })
   }
 
